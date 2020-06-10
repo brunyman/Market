@@ -5,6 +5,7 @@ import com.google.common.reflect.TypeToken;
 import com.xwaffle.universalmarket.UniversalMarket;
 import com.xwaffle.universalmarket.utils.InventoryBuilder;
 import com.xwaffle.universalmarket.utils.ItemBuilder;
+import net.craftersland.restarter.RR;
 import net.minecraft.nbt.NBTTagCompound;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.spongepowered.api.Sponge;
@@ -311,6 +312,14 @@ public class Market {
                             player.sendMessage(Text.of(TextColors.YELLOW, "New Balance: ", TextColors.GREEN, account.getBalance(currency)));
                             player.getInventory().offer(item.getItem());
                             Sponge.getScheduler().createTaskBuilder().execute(player::closeInventory).submit(UniversalMarket.getInstance());
+
+                            // Log that a market item was sold
+                            RR.log.info("***********************");
+                            RR.log.info("Market Item Purchased");
+                            RR.log.info("Buyer:" + player.getName());
+                            RR.log.info("Item: " + stack.getType().getName() + " (" + stack.getTranslation().get() + ")");
+                            RR.log.info("Seller: " + item.getOwnerName());
+                            RR.log.info("***********************");
                         } else {
                             player.sendMessage(Text.of(TextColors.RED, "Insufficient funds."));
                         }
@@ -321,6 +330,14 @@ public class Market {
                         player.sendMessage(Text.of(TextColors.RED, "You removed a players Listing."));
                         marketItem.forceExpire();
                         Sponge.getScheduler().createTaskBuilder().execute(player::closeInventory).submit(UniversalMarket.getInstance());
+
+                        // Log that a market item was removed by an admin
+                        RR.log.info("***********************");
+                        RR.log.info("Market Item Force Expired");
+                        RR.log.info("Executer:" + player.getName());
+                        RR.log.info("Item: " + marketItem.getItem().getType().getName() + " (" + marketItem.getItem().getTranslation().get() + ")");
+                        RR.log.info("Seller: " + marketItem.getOwnerName());
+                        RR.log.info("***********************");
 
                         return;
                     }

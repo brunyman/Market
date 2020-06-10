@@ -208,6 +208,13 @@ public class MarketCommand implements CommandExecutor {
                         UniversalMarket.getInstance().getMarket().addItem(new MarketItem(id, stack.copy(), player.getUniqueId(), player.getName(), price, (System.currentTimeMillis() + 1000*60*60*expireTime)), false);
                         player.sendMessage(Text.of(TextColors.YELLOW, "Item added to ", TextColors.GRAY, "Players Market", TextColors.YELLOW, " for $", TextColors.DARK_AQUA, price));
 
+                        // Log that a market item was added
+                        RR.log.info("***********************");
+                        RR.log.info("Market Item Added");
+                        RR.log.info("Item: " + stack.getType().getName() + " (" + stack.getTranslation().get() + ")");
+                        RR.log.info("Seller: " + player.getName());
+                        RR.log.info("***********************");
+
                         if (amount != prevAmount) {
                             stack.setQuantity(prevAmount - amount);
                             player.setItemInHand(HandTypes.MAIN_HAND, stack);
