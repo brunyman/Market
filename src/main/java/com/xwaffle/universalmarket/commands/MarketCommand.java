@@ -2,6 +2,7 @@ package com.xwaffle.universalmarket.commands;
 
 import com.xwaffle.universalmarket.UniversalMarket;
 import com.xwaffle.universalmarket.market.MarketItem;
+import net.craftersland.restarter.RR;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -11,6 +12,7 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -113,6 +115,12 @@ public class MarketCommand implements CommandExecutor {
 
                     if (player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
                         ItemStack stack = player.getItemInHand(HandTypes.MAIN_HAND).get();
+                        String name = stack.getType().getName();
+                        if (name.contains("fake")) {
+                            player.sendMessage(Text.of(TextColors.RED, "You can not sell this item on the market!"));
+                            RR.log.info(player.getName() + " just tried to sell a fake item on the market!");
+                            return CommandResult.success();
+                        }
                         double price;
                         try {
                             price = Double.parseDouble(args[1]);
@@ -142,6 +150,8 @@ public class MarketCommand implements CommandExecutor {
                                 return CommandResult.success();
                             }
                         }
+
+
 
                         if (UniversalMarket.getInstance().getMarket().useTax()) {
                             double tax = price * UniversalMarket.getInstance().getMarket().getTax();
